@@ -1,0 +1,37 @@
+name: Daily Contribution Commit
+
+on:
+  schedule:
+    - cron: '0 11 * * *'   # Runs every day at 11.00 AM IST
+  workflow_dispatch:        # Allows manual trigger
+
+permissions:
+  contents: write           # Allows pushing commits
+
+jobs:
+  daily-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Execute Python Script
+        run: python daily_commit.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "DipakPatil29"
+          git config user.email "102287202+DipakPatil29@users.noreply.github.com"
+          git add .
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "🤖 Daily changes commit at 9:16 AM IST"
+            git push
+          fi
